@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Grid Layout</title>
+    <style>
+        body {
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            grid-template-columns: 1fr 3fr;
+            grid-template-areas: 
+                "navbar navbar"
+                "aside main"
+                "footer footer";
+            height: 100vh;
+            margin: 0;
+            grid-gap: 10px; /* Add gaps between grid items */
+        }
+
+        .navbar, .aside, .main, .footer {
+            padding: 1rem;
+        }
+
+        .navbar {
+            grid-area: navbar;
+            background: lightblue;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .navbar ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 20px;
+        }
+
+        .navbar li {
+            margin: 0;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+        }
+
+        .aside {
+            grid-area: aside;
+            background: lightpink;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .aside p {
+            margin: 0;
+        }
+
+        .main {
+            grid-area: main;
+            background: lightgreen;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .footer {
+            grid-area: footer;
+            background: lightcoral;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </div>
+    <div class="aside">
+        <p>This is a paragraph inside the aside section. </p>
+    </div>
+    <div class="main">
+        <p>This is a paragraph inside the main .this will display whatever written inside main </p>
+    </div>
+    <div class="footer">
+        <div>
+            <p>Contact us at:</p>
+            <p>Email: rohit56@gmail.com</p>
+            <p>Phone: +1234567890</p>
+        </div>
+    </div>
+</body>
+</html>

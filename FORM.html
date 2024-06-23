@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 520px;
+            height: 728px;
+            text-align: center;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .container h2 {
+            font-size: 24px;
+            color: #333;
+        }
+        .form-group {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container label {
+            width: 360px;
+            text-align: left;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #555;
+        }
+        .container input {
+            width: 360px;
+            height: 48px;
+            padding: 10px;
+            margin: 5px 0 20px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .container .password-input {
+            display: flex;
+            align-items: center;
+            width: 360px;
+            height: 48px;
+            margin: 5px 0 20px 0;
+            box-sizing: border-box;
+        }
+        .container .password-input input {
+            flex: 1;
+            border-right: none;
+            border-radius: 5px 0 0 5px;
+            height: 100%;
+            box-sizing: border-box;
+        }
+        .container .password-input span {
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-left: none;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            box-sizing: border-box;
+        }
+        .container .btn, .container .google-btn {
+            width: 360px;
+            height: 48px;
+            border: none;
+            border-radius: 5px;
+            margin: 10px 0;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+        }
+        .container .btn {
+            background-color: #00b894;
+            color: #fff;
+        }
+        .container .google-btn {
+            background-color: #333;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container .google-btn img {
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+        }
+        .container .login-link {
+            font-size: 14px;
+        }
+        .container .login-link a {
+            color: #00b894;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Create an Account</h2>
+        <form class="form-group">
+            <label for="full-name">Full Name</label>
+            <input type="text" id="full-name" placeholder="Full Name">
+            
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="Email">
+            
+            <label for="password">Password</label>
+            <div class="password-input">
+                <input type="password" id="password" placeholder="Password">
+                <span>&#128065;</span>
+            </div>
+            
+            <label for="phone-number">Phone Number</label>
+            <input type="text" id="phone-number" placeholder="Phone Number">
+            
+            <button type="button" class="btn">Sign Up</button>
+        </form>
+        <p>OR</p>
+        <button type="button" class="google-btn">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" alt="Google Logo">
+            Sign Up with Google
+        </button>
+        <p class="login-link">Already have an Account? <a href="#">Login</a></p>
+    </div>
+</body>
+</html>
+
+
