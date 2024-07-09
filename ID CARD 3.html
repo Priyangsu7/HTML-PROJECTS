@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ID Card Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .card-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .card {
+            width: 250px;
+            height: 400px;
+            perspective: 1000px;
+            margin: 0 auto;
+        }
+        .card-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            text-align: left;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
+        .card-front {
+            background: #1A3A60;
+            color: #fff;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .card-front h2 {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        .card-front p {
+            margin: 5px 0;
+        }
+        .card-front img {
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            background-color: #fff;
+            margin-bottom: 10px;
+        }
+        .card-back {
+            background:#1A3A60;
+            padding: 20px;
+            transform: rotateY(180deg);
+        }
+        .card-back h2 {
+            color: #f3f7fc;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        .card-back p {
+            margin: 5px 0;
+            color: #f3eeee;
+        }
+        .card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+        .form-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .error {
+            color: red;
+        }
+        .button-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .button-container button {
+            background: #F58220;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .spacing {
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <form id="idCardForm">
+        <label for="companyName">Company Name:</label><br>
+        <input type="text" id="companyName" name="companyName" required><br><br>
+        <label for="tagline">Tagline:</label><br>
+        <input type="text" id="tagline" name="tagline" required><br><br>
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name" required><br><br>
+        <label for="designation">Designation:</label><br>
+        <input type="text" id="designation" name="designation" required><br><br>
+        <label for="id">ID:</label><br>
+        <input type="text" id="id" name="id" required><br><br>
+        <label for="dob">DOB:</label><br>
+        <input type="date" id="dob" name="dob" required><br><br>
+        <label for="phone">Phone:</label><br>
+        <input type="tel" id="phone" name="phone" required><br><br>
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" required><br><br>
+        <label for="joinedDate">Joined Date:</label><br>
+        <input type="date" id="joinedDate" name="joinedDate" required><br><br>
+        <label for="expireDate">Expire Date:</label><br>
+        <input type="date" id="expireDate" name="expireDate" required><br><br>
+        <button type="submit">Submit</button>
+        <div class="error" id="error"></div>
+    </form>
+</div>
+
+<div class="card-container">
+    <div class="card" id="card" style="display:none;">
+        <div class="card-inner">
+            <div class="card-front">
+                <div class="header">
+                    <h2 id="card-companyName"></h2>
+                    <p id="card-tagline"></p>
+                </div>
+                <img src="fotor-20240709201547.jpg" alt="Profile Picture">
+                <h2 id="card-name"></h2>
+                <p id="card-designation"></p>
+                <p id="card-id"></p>
+                <p id="card-dob"></p>
+                <p id="card-phone"></p>
+                <p id="card-email"></p>
+            </div>
+            <div class="card-back">
+                <h2>Company Name: <span id="card-companyName-back"></span></h2>
+                <p>SOFTWARE ENGINEER WITH EFFICIENT SKILLS IN MANAGEMENT</p>
+                <p>Joined Date: <span id="card-joined-date"></span></p>
+                <p>Expire Date: <span id="card-expire-date"></span></p>
+                <p>PRIYANGSU PANDA</p>
+                <p>Employee Signature</p>
+            </div>
+        </div>
+    </div>
+    <div class="spacing"></div> <!-- Adding spacing between card and buttons -->
+    <div class="button-container" style="display:none;" id="card-buttons">
+        <button onclick="flipCard()">Flip Card</button>
+        <button onclick="editCard()">Edit Card</button>
+    </div>
+</div>
+
+<script>
+    const form = document.getElementById('idCardForm');
+    const errorDiv = document.getElementById('error');
+    const card = document.getElementById('card');
+    const cardInner = document.querySelector('.card-inner');
+    const cardButtons = document.getElementById('card-buttons');
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const companyName = document.getElementById('companyName').value;
+        const tagline = document.getElementById('tagline').value;
+        const name = document.getElementById('name').value;
+        const designation = document.getElementById('designation').value;
+        const id = document.getElementById('id').value;
+        const dob = document.getElementById('dob').value;
+        const phone = document.getElementById('phone').value;
+        const email = document.getElementById('email').value;
+        const joinedDate = document.getElementById('joinedDate').value;
+        const expireDate = document.getElementById('expireDate').value;
+
+        if (companyName && tagline && name && designation && id && dob && phone && email && joinedDate && expireDate) {
+            errorDiv.textContent = '';
+
+            document.getElementById('card-companyName').textContent = companyName;
+            document.getElementById('card-tagline').textContent = tagline;
+            document.getElementById('card-name').textContent = name;
+            document.getElementById('card-designation').textContent = designation;
+            document.getElementById('card-id').textContent = `ID: ${id}`;
+            document.getElementById('card-dob').textContent = `DOB: ${dob}`;
+            document.getElementById('card-phone').textContent = `Phone: ${phone}`;
+            document.getElementById('card-email').textContent = `Email: ${email}`;
+            document.getElementById('card-companyName-back').textContent = companyName;
+            document.getElementById('card-joined-date').textContent = joinedDate;
+            document.getElementById('card-expire-date').textContent = expireDate;
+
+            card.style.display = 'block';
+            cardButtons.style.display = 'block';
+        } else {
+            errorDiv.textContent = 'Please fill in all fields.';
+        }
+    });
+
+    function flipCard() {
+        card.classList.toggle('flipped');
+    }
+
+    function editCard() {
+        card.style.display = 'none';
+        cardButtons.style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
+
+
