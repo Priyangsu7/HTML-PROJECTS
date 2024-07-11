@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMART</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        header {
+            background-color: #2874f0;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 24px;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+        }
+
+        #search-bar {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 250px;
+        }
+
+        #search-button {
+            padding: 10px 15px;
+            margin-left: 10px;
+            background-color: #ff6f61;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .sort-container {
+            display: flex;
+            align-items: center;
+        }
+
+        #sort-options {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        #login-button, #cart-button {
+            padding: 10px 15px;
+            margin-left: 10px;
+            background-color: #ff6f61;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        main {
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+        #product-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .product-card {
+            background-color: rgb(234, 234, 243);
+            border: 1px solid #ddd;
+            padding: 20px;
+            width: 220px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-card img {
+            width: 220px;
+            height: 200px;
+            align-self: center;
+            border-radius: 10px;
+        }
+
+        .product-card h2 {
+            font-size: 18px;
+            margin: 10px 0;
+            font-weight: 600;
+        }
+
+        .product-card p {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .product-card .price {
+            font-size: 16px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .product-card button {
+            padding: 10px;
+            background-color: #eb8f10;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .product-card button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>EMART</h1>
+        <div class="search-container">
+            <input type="text" id="search-bar" placeholder="Search products...">
+            <button id="search-button">Search</button>
+        </div>
+        <div class="sort-container">
+            <select id="sort-options">
+                <option value="default">Sort By</option>
+                <option value="low-to-high">Price: Low to High</option>
+                <option value="high-to-low">Price: High to Low</option>
+            </select>
+            <button id="login-button">Login</button>
+            <button id="cart-button">Cart</button>
+        </div>
+    </header>
+    <main>
+        <div id="product-list"></div>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const productList = document.getElementById('product-list');
+            const searchBar = document.getElementById('search-bar');
+            const searchButton = document.getElementById('search-button');
+            const sortOptions = document.getElementById('sort-options');
+
+            let products = [
+                { id: 1, name: 'Apple', description: 'Fresh red apples', price: 150, image: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhMSEhMVFhUXFxgXFRcWGBUXFRUWFRUXGBUXFRUYHSggGBolHRUVITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OGxAQGy0lICUtLS0tLSstLS0tLS8tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLf/AABEIAMgAyAMBIgACEQEDEQH/xAAcAAABBQEBAQAAAAAAAAAAAAAAAwQFBgcCAQj/xAA/EAABAwIEBAQDBgQFAwUAAAABAAIDESEEBRIxBkFRYRMicYEHkbEyQqHB0eEUcoLwIzNSYvGSotIVFiREU//EABoBAAMBAQEBAAAAAAAAAAAAAAADBAIBBQb/xAArEQACAgEDAwMDBAMAAAAAAAAAAQIRAwQhMRITQQUiURQyYUJxgaEGFZH/2gAMAwEAAhEDEQA/ANxQhCABCEIAEIQgAQhCABCEIAEJlmubQ4ZniTyNjb1cd+wG5Pokclz6DFAmFxNOoLfcV5ICiTQhCABCb4/HRwxulleGMaKlx2/5WTcQ/F9xcW4Rga0W8R4q49w3Ye6zKSXJxySNgJSbsQwbvaPUhfN2P4uxM5rLM93atB7NFknFmBO5J9SkS1FeBMs1eD6Xjka77JB9CCu1894HM5WULHuaexIVryr4gYiOgkpK3vZ3zCxHWR/Uji1C8o1lCgci4sw+JoGnQ/8A0ut8jsVPKqMlJWh6knugQhC0dBCEIAEIQgAQhCABCEIAELwlN5scxu5QA5QoPEcTwt3cFFY7jmJoOgglF0Ohp8s+Iszv4yDFx4oPkAMLv8p4FaUF23+yfqrL8Jcz8RwBp/lEe4c0/mmnFPF0WLgfh5GAhwsT91w2cFS+A88fhHvI3ZXfoRT9EmUladln0uSMOmUas+j1C4ziWFjzGzVK8WcIxUMPRztge26znMPiVI+Mxjy6rOcLEDnp6EqNm42AaGMY1oApRv8AdytrJG+REvT9TTcY8D34hSYrGGlNMbfssBFPU3uVmOLyidhuwq14vilzlHvzQuXck8Z5UnKLqS3KuQ4bghOMNiKKYkkrumskA5BSSlFmetMd4Oaql8PFX9lDYSA1/S34Kz5K9tq29VK4psU0mOsuwLgQRULSuHc5dQMlPYOP5qDy7DgjZPJoqCydii4bodCLhuXZCr/DWa66xOPmH2e46KwK+E1JWiqMrVghCFo6CEIQAIQuZJA0VKAPXGm6iswztkdq3UDxJxIBVrTTus6zXiQuq1u1d+Z91vppWxmLG5v8Gly5rI/ZjvmB9VHY/wAYgk62tpzAePw5LNo84lcRRzifdW/h+XHWLaU6P/5Wer4LFgUN7X8kRmUJ1XO/NpqD6dD2KdYLhjxBXWrDmuRyTN1OjEcn+pn2XH/cPzVeyvOn4aURztLRsSRb17qacN9z1sOqcsVY3uhw7goEGjr0t6hUPN8AcNiQDs9pB9Qtnc9gLZdRDeZB8txbV27rNfioRqieKeV9ajmHD9kOCXBPPVZMiqX7lOkmoU3OK37/AIJDFS3d6pmXEmgWIwKfqumN/u/+j9s91K5Nl02IdSGMupvT8ykMuyCR7mtG5NKC57/Ja1leYYTLsOGVaJKXA8zq96c1R9Ov1Hka3NDPGlG38maYrBSRO0TMcw9HCny6ryOOtlLcT8XickCrh/uCrmHzEtNSAR0UefCov2uzzF6fmlG0iwYGC4U7h8FQg9VF5RmOHfSr9DujtvmrphMM1zbEHoQQVNGEr3I5YMkHU1RIZK2gFD+ik8RsorL3aXUKlsSatVUX7R0ftKniMwME7JBycK+nP8FqcUgc0OGxAI9wsc4kvXstK4Kxvi4OF3MDQfVtvpRc0k/dKJzBL3NE4hCFeVAhCEAeEqocWZ6GAtBp1Kn87xvhxkrIuJ8bYuce9K/VOxRvdmJPeiJzbHCWZsDnOBNzT7tq1cT9FWY3Emg3+iUxmexljwyOksh87yfu1rRvra/ZQni8wb+vVKnJuz1cahBpJ2iyYPMxEXinmuAQbdErDnsguHu36qrif3TgzgmtKfsku0XQyRa3RpORcdyRgB5Lhfc1KtH/ALnwOIbpma2/ULE45jSxTpuNOkNsBvbrtVc7jQPSYsjtbP8ABsYODLQyOZoYbaHEEdQPQKscR8EmaojxETQ6haytgQdx0GyppkpSjq90vFij1XO4nyjf0MlspslnfCrEOIJmiAtX86eyeYD4WxMcHzYttAdm0HNQ7szlIu91PUpP+IcRXUTf3R3YrhHF6dkls5f0Xqf+Dw0ZjgcHGlDWpJ/qCpWKga4ki3Y33SuBw75XBrASf73VuwHBlRqlf7N/UpUsk8hdi0+n0cfc+TPpMrrZJyZFIASGkjeoFqd1tWBymGKhjjbXqbk+55pzHgWucXDY/aFrg2oQjtP5JsmuxPiJgRwRbuCDyTnDTywus5zT2JHdbbLwtA5paW1HKt9PYFULifhDw9T4jqa00cNy00rT5Jc8coqwx5MGZ9K/sjcp4ql1APdqHelfmtcyNkWJhDmPNeYsaH9Fg7cJeo3V34Dz0wvbU+XZw7Hmu4pRumI1fpcXB9MafO3ksfFPDL2DU06m+lKJ58LpSIpoj919R/UP2V0cGvbQ3a4fMFVvJMu/h8ZI0fZfHqHfS4fjdb7PbyqUeGfMdpRn1ItCEIVg8EISeJfpa49AgCm8V4zU/SNhv7LKOL8UdLr3V6zHEanSO9lmXFj7e6srpgIg7kVaR3MLzW2gtf8AdcFwvb09Vwbeqkkejj+Rdkl7pds1609uSZuq03F06wkWsE1FWkEgmgLeaRIvxW3QrG41oFNMyonCuxTZGlrXaXN2cL0rTmKqGOI/x9UDKCtmE6hcULancbrpmIL3EVDAb6akNqNh9VhlUHfDpkh4jQ1tDU8+lLU990pHKmc0jNf+HUNtua3oNV+larpklEtnoY3vZKRuS0aag6RfciouLeq9bIktnoRSJ7Kcd4Tg4e/daFlOZhwBrYrKY5eamchzfw3aXkhp2PQ/ou459LF6vSLLC1yauB94bc/1S0QFa81DZZjwQBUEHYg2KlWuVsXZ8tlxuLpj5pTWXL2kvN/OBqFqOI2J7pRjkqbrVWT7xexlHFWTeBNUfZJqPzCisONLqjY/mtM41wQfAXAeZlx6c1mrXVtzUGWPRLY+r0GT6jBb5WzNd4FzPxYNJPmZb25KadCTOH0s1hFepeQfo38VnPw5xeifRyc35kLUVbifVFWfK+p4Fi1DS4e4IQhNIATDPJNMLz2T9Q3FbqQFajyjMuDOMQ+rHdyVR86w2t4BPlFXO/la0udTvQK4znyFU7PZTH5xem9eYIII/FVz+0XiS6lZT8ZVw8Sga0uLWtHKgB9990xcU/zCfU4VFGgm3Su6aMDS65oDzULvyenJRUqhwch1a1JSkGmvmJA7fRIkb0uhr6EGn7rFDFKh1C8gkNNAevTku2P2qAUk4l5JDbAcuQ2uumPaW0O/Lv6rDRVjn4H08JZSpFTuOY9VyJE3BsDX25pXASsbI0yglmxpv6pbRbHIrLDJk0rMLHi6tdE80qDdrr2cOWxTSGRdTZy4w/wrHVi16xv0sPS5KbYd7Q8Bx8tbkdEqaXgu0+SST6358D5klwOqeYqIxvLCQSKXBqDUV391FykFx0k0r5a705VpzS8Lzvv1Smj0YTbf4J7KM4fE4X8vT9FqeU40SsBB5fusS8Sp59le+AM2+4fun8D/AGU3BOnRD6nplPG5pbo0OKVKucSLG/JNMsmBLmO6VHZdxSq1HzMlucYmcPYY3jS5zTY9aXCyKV2l5HQrV86LfCcXGlBUHmPRZFjwdbq9d+vOql1Pg+g9D2Uyw8NYnTiYj3p/fyW2NNgvn7J5v8WPqHD5LfcK6rGnsPomaZ7Hm/5BBLJFr4FUIQqT54FDcV/5DlMqM4kZXDv9FqH3IzLgyiu6rOfRggt6gqwufQkKJzAVqrHwLjyZxiyefKyaFTmc4SjiVDObe6hlsz0Y7qzlshFQOe6ImFxoN15RFwsG6JozsaS8GhLSKDkaUII6KMbJalk3XYXJbjYT8DoRmgcRY2XqRDzQXsNl0HJbRXCaHUbqcvdLsdcGlRzSWXQeJI1moN1EDU6ukV605L2SrS5hOxINNqi1ktosx5B54vmJaKDkOg6JZj/mmBIFKGtv7CVY9KlE9HDmQ/ZIaU5bqS4ex5jxDTyNioWORdmSjgR1WFs7KpSUo18m2FpIZJHIQCC14oDUHkDy537p4zEAD0VQyvOf/iOdX7ND+ND9VXsy4pkkGlvlCreRRVngw0c8j6fCZYOMeIg4eEw25qpzu1RNf6tP9P7EKPfITcp/gjqgkHNrgfZwP6BTNubtnt48ccEFGI/yOOssZ5WW/wCDHkZ6BYnw/h/LE7uB+a27Djyt9B9FZhjSPmvW8nXKP8iiEITjwgTfMItUb29QU4XhCEBhOdNLHupuAQPXko7CO1Bvif1eysvH+CMczjyqqWMRSyqsMasgsxw0jpC82aXUaORFenoo7G4QtNVa/CbWv9+yb4rChwU7j8lnUtkkU+R5JrRJuNVLYnAEGtFHSx32olMZ4OYNNTqrSlqdV49+9NlyWryi4dtrY6BShfYCl+Z6pON1CDSvZdyyFxJPNcaNRew4w2Kc0OaKUO9R05g8kBybgpRpuFhophkdULscl2PTaSlTp25JSJ9qf8rDiWYsm9Dtrk4xOzD2Ca67IfNVoHRKou7lInMtzPTFNGTu2o+YTKA1KYxV3S0MhCJK0bxZEnfyPpzZSWRnyyg7nTT2JqomIF1lZ8rwWmg5n9Cu44ms2VNlr4dwhPgN7Fx7ANNPxK1hosFSeE8tfrBt4ehoPWoqbK7qyCo+T1+XrnsCEIWyAEIQgCj/ABKy3VGJANrFYpio3anU5Cp7BfTOaYMSxOjPMW9V8+8VYMwmeMihNKexNk2LtHYc0iuYfHgqQjnBVXPl2FDzTmDFFL6y/oRNuYPVRuIwzSSAlo8Wuw5pJI3O643Z1JoiX4K9/wAE1dhirC5lUi+GqXQwr7oV6I1MvwyS/gzevy5rjNKD5IzSumxE1oNt1J/wnZAwyzQxIjWtKUYn7cOQDTmhuFXKGxdCEZsbbryOJziQBVPmYdO8Ix0bw9m46ioPqFlRHvI3Rx/6Y9kOtwIBIAr1SUGHLipvMMdLiS0ykUaKNa0BrR1oBz7pbA4S4sjoHd1veqHGS5eOYVlyjCa315VoE0gj0ttubD3Vz4Wy24t9nfu7mmqPgkz5+lORbMpw+hgCfLxraCi9TT55u3YIQhBwEIQgAWd/FPhzxGeOxtx9r9VoiTnhD2lrhUEUIXU6YHyLj8OWk1TGq034k8JOw8hc0Vjddp/JZviYtKJryVYsng5jlNgnGqRrjaw3UenDsS4+tLlLKVO1uS0WKslmyKDjmoncWIQMskl06pNTcpsycJxHIuM3E90r3wkayTapStbLLGpIS8NdtiSgalWR0XBkYiTI05bHVdR73SsLak22uuDYqjqOK6l8HEmuHi2U3l+ELiG/M9BzWkZm6JLJsEXEPpzoz15n2WjZPgxGwdVF8PZbs4igAo0dlZAmJHi6rN1ukCEIWiMEIQgAQhCABCEIAY5zlUeJidFILHY8weoXzpx1wpJhJC1w8pqWu5Edl9MqPzvJ4cVEYpm6mnbq09WnkVpM6nW58hytokq0utF49+HU+DJewGSHk9ou0f7xy9dlnk0dFxodCYnrSkci5jYDY2Xj2AHeqxQ9S8j2Oa6dxzKKZIl2SLlD45Cajl6EpdrlERzJ7DMsNFMJWSkb7USoUfFJUpwZlgrh9tjuNPMOy6j8O5WLKsMXEWXQbpWOsuwRd+yvXDuRE3cKN59+wSvD3D9AHOFPqfRWyNgaABYBNUTyNTq79sQjYAKDZdIQtnmghCEACEIQAIQhAAhCEACEIQB45oIoRUcws/4s+FGExRL4j4Eh/wBIrGT3Zy9loKEAfL3E3wzzDCEnwjLGPvxVcKd2/aHyVKkaWkhwII3BFD8l9rKBz/g3A4w6sRh2PcLahVrv+ptCV00pM+Rg5KtevozE/BbLHfZEzP5ZKj/uBUefgXgq2xGIp08n10rgyOSjCo5U4jmW4t+B2C//AHxHzZ/4pzB8F8vG753f1tH0asuI+OpSMOjxCc4eQuNACT0F1v8Ag/hflkf/ANfX/O95/CtFYsuyTDQCkMEcf8rQD891ntjf9hS2RivDPBeMnofCMbD96Ty27A3K1nIOE4sOAT539TsPQKwoWlFImy6vJk24QIQhaJgQhCABCEIAEIQgAQhCABCEIAEIQgAQhCABCEIAEIQgAQhCABCEIAEIQgAQhCABCEIAEIQgAQhCAP/Z', category: 'Fruits' },
+                { id: 2, name: 'Banana', description: 'Ripe bananas', price: 60, image: 'https://i.pinimg.com/236x/78/e4/41/78e441235d613fd2fc8cf1aa935910e4.jpg', category: 'Fruits' },
+                { id: 3, name: 'Grapes', description: 'Sweet green grapes', price: 120, image: 'https://i.pinimg.com/236x/c1/41/83/c141831e40fd667667ec9f703aa5179e.jpg', category: 'Fruits' },
+                { id: 4, name: 'Orange', description: 'Juicy oranges', price: 100, image: 'https://i.pinimg.com/236x/01/f9/0a/01f90a367906ba88e4fdfcfc7abeaa71.jpg', category: 'Fruits' },
+                { id: 5, name: 'Mango', description: 'Delicious mangoes', price: 200, image: 'https://i.pinimg.com/236x/7f/1b/0b/7f1b0b5748e06d829ef6ee1ea4b2399c.jpg', category: 'Fruits' },
+                { id: 6, name: 'Pineapple', description: 'Tropical pineapples', price: 90, image: 'https://i.pinimg.com/236x/86/ee/e8/86eee839e2cb0240ce01f8e2708b0c63.jpg', category: 'Fruits' },
+                { id: 7, name: 'Carrot', description: 'Fresh carrots', price: 80, image: 'https://i.pinimg.com/236x/3d/57/cc/3d57cc019c80506f9db6fd4cb34d155c.jpg', category: 'Vegetables' },
+                { id: 8, name: 'Broccoli', description: 'Organic broccoli', price: 150, image: 'https://i.pinimg.com/236x/47/7b/42/477b42a8ff9c3c5fa65641ef74e84b65.jpg', category: 'Vegetables' },
+                { id: 9, name: 'Spinach', description: 'Healthy spinach', price: 50, image: 'https://i.pinimg.com/236x/31/08/9b/31089b675c44846cc2db41db85155e41.jpg', category: 'Vegetables' },
+                { id: 10, name: 'Potato', description: 'Golden potatoes', price: 40, image: 'https://i.pinimg.com/236x/1f/98/b4/1f98b4ff5060a93b3b2aacd71036c0c6.jpg', category: 'Vegetables' },
+                { id: 11, name: 'Tomato', description: 'Juicy tomatoes', price: 30, image: 'https://i.pinimg.com/236x/bb/a3/f2/bba3f2bf481270c6a3a192b5849ba52c.jpg', category: 'Vegetables' },
+                { id: 12, name: 'Cucumber', description: 'Crisp cucumbers', price: 20, image: 'https://i.pinimg.com/236x/92/e4/48/92e448fa6b82584da7f4229b1205b3d4.jpg', category: 'food' },
+                { id: 13, name: 'Milk', description: 'Fresh cow milk', price: 60, image: 'https://i.pinimg.com/236x/32/c2/bc/32c2bcc8de2c66acffd74ad61a64426a.jpg', category: 'food' },
+                { id: 14, name: 'Lassi', description: 'Fresh kesar lassi ', price: 100, image: 'https://i.pinimg.com/236x/e4/c5/db/e4c5dbacd7810e7ef224018a4624683e.jpg', category: 'food' },
+                { id: 15, name: 'Chocolate', description: 'Dark chocolate ', price: 150, image: 'https://i.pinimg.com/236x/e3/e4/9f/e3e49f291722baf15ff94b44af47cf42.jpg', category: 'food' },
+                { id: 16, name: 'Egg', description: 'Fresh egss ', price:10, image: 'https://i.pinimg.com/236x/02/1a/ff/021aff11893051c628c86d6c9307cc70.jpg', category: 'food' },
+                { id: 17, name: 'Icecream', description: 'Sweet and tasty ', price: 70, image: 'https://i.pinimg.com/474x/7a/e5/a8/7ae5a872cce37701b38a4985e6dc5572.jpg', category: 'food' },         
+                { id: 18, name: 'Juice', description: 'fresh orange juice ', price: 100, image: 'https://i.pinimg.com/236x/43/a4/34/43a4343585417d7541efdd8da4998067.jpg', category: 'food' },
+                { id: 19, name: 'Iphone 15', description: 'Premium smartphone', price: 100000, image: 'https://i.pinimg.com/736x/f9/76/59/f97659126a015e63e4886a468fba379d.jpg', category: 'Smartphones' },
+                { id: 20, name: 'Redmi 13', description: 'Affordable smartphone', price: 20000, image: 'https://i.pinimg.com/236x/0e/a2/2c/0ea22c51b001c1ecdaae51d1912b240d.jpg', category: 'Smartphones' },
+                { id: 21, name: 'IQOO 12', description: 'Mid-range smartphone', price: 30000, image: 'https://i.pinimg.com/236x/cc/32/ac/cc32ac2d115544550200c08f315e3f87.jpg', category: 'Smartphones' },
+                { id: 22, name: 'Vivo X90 Pro', description: 'Flagship smartphone', price: 60000, image: 'https://i.pinimg.com/236x/c3/bb/af/c3bbaf244b1bb85cfab8556c46b7e727.jpg', category: 'Smartphones' },
+                { id: 23, name: 'POCO M6', description: 'Budget smartphone', price: 10000, image: 'https://i.pinimg.com/236x/a3/77/4e/a3774ef04e39b631e4f4d1198d84816f.jpg', category: 'Smartphones' },
+                { id: 24, name: 'Samasung S24 Ultra', description: 'High end smartphone', price: 120000, image: 'https://i.pinimg.com/236x/44/db/f3/44dbf3252affe1b050eef4b7ea01c988.jpg', category: 'Smartphones' },
+                { id: 25, name: 'JACOB & CO', description: 'Luxury watch', price: 200000, image: 'https://i.pinimg.com/564x/12/25/e8/1225e88212e4ea4929616f9e28812b4c.jpg', category: 'Watches' },
+                { id: 26, name: 'TITAN', description: 'Casual watch', price: 5000, image: 'https://i.pinimg.com/236x/87/07/3d/87073d66a68afaa23078c794050a4dff.jpg', category: 'Watches' },
+                { id: 27, name: 'ZOOP', description: 'Sports watch', price: 3000, image: 'https://i.pinimg.com/236x/8e/bb/c3/8ebbc3581287ffb23fc75e4c4ca04c50.jpg', category: 'Watches' },
+                { id: 28, name: 'NOISE', description: 'Smart watch', price: 20000, image: 'https://i.pinimg.com/236x/37/a8/ae/37a8ae2095512429d5d0ffa5d8675378.jpg', category: 'Watches' },
+                { id: 29, name: 'ROLEX', description: 'Classic watch', price: 10000, image: 'https://i.pinimg.com/236x/76/f4/1f/76f41f1503ee8875d6e0e8ed169afd95.jpg', category: 'Watches' },
+                { id: 30, name: 'CASIO', description: 'Digital watch', price: 8000, image: 'https://i.pinimg.com/236x/5d/4d/cb/5d4dcb9ed870e6dd99f8422a02853461.jpg', category: 'Watches' },
+                { id: 31, name: 'Lipstick', description: 'Smooth and vibrant lipstick', price: 600, image: 'https://i.pinimg.com/236x/bf/33/53/bf335371b88200f960232c7bbaf0cda8.jpg', category: 'Ladies Cosmetics' },
+                { id: 32, name: 'Foundation', description: 'Long-lasting foundation', price: 800, image: 'https://i.pinimg.com/236x/75/a9/f2/75a9f23330d9572ff2e255bb77580f13.jpg', category: 'Ladies Cosmetics' },
+                { id: 33, name: 'Mascara', description: 'Volumizing mascara', price: 500, image: 'https://i.pinimg.com/236x/28/73/87/287387357475379db50c3141f4338843.jpg', category: 'Ladies Cosmetics' },
+                { id: 34, name: 'Eyeliner', description: 'Waterproof eyeliner', price: 400, image: 'https://i.pinimg.com/236x/1f/cf/b7/1fcfb7fe0c6110b454a27e646f85cac4.jpg', category: 'Ladies Cosmetics' },
+                { id: 35, name: 'Blush', description: 'Rosy blush', price: 450, image: 'https://i.pinimg.com/236x/3b/98/71/3b987144c45ca002f52572590d2c44ed.jpg', category: 'Ladies Cosmetics' },
+                { id: 36, name: 'Eyeshadow', description: 'Colorful eyeshadow palette', price: 700, image: 'https://i.pinimg.com/236x/0d/83/88/0d8388d031d873a689fad290f4733147.jpg', category: 'Ladies Cosmetics' },
+                { id: 37, name: 'ELLE', description: 'Floral fragrance', price: 1200, image: 'https://i.pinimg.com/236x/c2/f8/c9/c2f8c98bb23966748f229066afaea5f3.jpg', category: 'Perfumes' },
+                { id: 38, name: 'BEARDO', description: 'GOD FATHER Woody fragrance', price: 1500, image: 'https://i.pinimg.com/236x/b6/ae/8a/b6ae8a65b9ec62b34d3d8f14a125477f.jpg', category: 'Perfumes' },
+                { id: 39, name: 'VERSACE', description: 'EROS FLAME Citrus fragrance', price: 7000, image: 'https://i.pinimg.com/474x/83/c0/b9/83c0b941bf23f47b6795e81e2906af8f.jpg', category: 'Perfumes' },
+                { id: 40, name: 'LA VaNILLA', description: 'Musky fragrance', price: 3000, image: 'https://i.pinimg.com/236x/b1/48/83/b148837844e1054444750205d6a751d9.jpg', category: 'Perfumes' },
+                { id: 41, name: 'SUGARFUL', description: 'Sweet fragrance', price: 1400, image: 'https://i.pinimg.com/236x/97/4a/64/974a64fc7d0fea642481f65a4e078324.jpg', category: 'Perfumes' },
+                { id: 42, name: 'VERSACE', description: ' NOIR Spicy fragrance', price:8000, image: 'https://i.pinimg.com/564x/ed/79/71/ed7971dec9eb2f6971a6ea1094883ae9.jpg', category: 'Perfumes' },
+            ];
+
+            function displayProducts(products) {
+                productList.innerHTML = '';
+                products.forEach(product => {
+                    const productCard = document.createElement('div');
+                    productCard.classList.add('product-card');
+                    productCard.innerHTML = `
+                        <img src="${product.image}" alt="${product.name}">
+                        <h2>${product.name}</h2>
+                        <p>${product.description}</p>
+                        <p class="price">₹${product.price}</p>
+                        <button onclick="removeProduct(${product.id})">Remove</button>
+                    `;
+                    productList.appendChild(productCard);
+                });
+            }
+
+            window.removeProduct = function(id) {
+                products = products.filter(product => product.id !== id);
+                displayProducts(products);
+            }
+
+            function searchProducts() {
+                const query = searchBar.value.toLowerCase();
+                const filteredProducts = products.filter(product => 
+                    product.name.toLowerCase().includes(query) || 
+                    product.description.toLowerCase().includes(query)
+                );
+                displayProducts(filteredProducts);
+            }
+
+            function sortProducts() {
+                const option = sortOptions.value;
+                let sortedProducts = [...products];
+                if (option === 'low-to-high') {
+                    sortedProducts.sort((a, b) => a.price - b.price);
+                } else if (option === 'high-to-low') {
+                    sortedProducts.sort((a, b) => b.price - a.price);
+                }
+                displayProducts(sortedProducts);
+            }
+
+            searchButton.addEventListener('click', searchProducts);
+            sortOptions.addEventListener('change', sortProducts);
+
+            displayProducts(products);
+        });
+    </script>
+</body>
+</html>
+
+
+
